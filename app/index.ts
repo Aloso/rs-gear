@@ -14,7 +14,7 @@ function createInputs(callback: () => void): () => DoubleGearProps {
   const outerToothEndWidth = new NumberInput(0.15, 1, percentMapper)
   const outerAngleOffset   = new NumberInput(0,    1, degreeMapper)
 
-  const innerRadius        = new NumberInput(0.71, 1, percentMapper)
+  const innerRadius        = new NumberInput(0.74, 1, percentMapper)
   const innerTeeth         = new NumberInput(5,    0, mapAtLeast(0))
   const innerToothLen      = new NumberInput(0.24, 1, percentMapper)
   const innerToothWidth    = new NumberInput(0.35, 1, percentMapper)
@@ -22,7 +22,7 @@ function createInputs(callback: () => void): () => DoubleGearProps {
   const innerAngleOffset   = new NumberInput(0,    1, degreeMapper)
 
   byId('commonConfig', HTMLElement).append(
-    diameter.getLabel('Diameter'),
+    diameter.getLabel('Canvas size'),
   )
 
   byId('outerConfig', HTMLElement).append(
@@ -68,6 +68,8 @@ function createInputs(callback: () => void): () => DoubleGearProps {
       toothWidth: outerToothWidth.value,
       toothEndWidth: outerToothEndWidth.value,
       angleOffset: outerAngleOffset.value,
+      roundGearShape: false,
+      roundToothShape: false,
     },
     inner: {
       radius: innerRadius.value,
@@ -76,6 +78,8 @@ function createInputs(callback: () => void): () => DoubleGearProps {
       toothWidth: innerToothWidth.value,
       toothEndWidth: innerToothEndWidth.value,
       angleOffset: innerAngleOffset.value,
+      roundGearShape: true,
+      roundToothShape: false,
     },
   })
 }

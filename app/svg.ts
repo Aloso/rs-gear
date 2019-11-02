@@ -7,6 +7,8 @@ export interface GearProps {
   toothEndWidth: number
   teeth: number
   angleOffset: number
+  roundGearShape: boolean
+  roundToothShape: boolean
 }
 
 export interface DoubleGearProps {
@@ -15,13 +17,18 @@ export interface DoubleGearProps {
   inner: GearProps
 }
 
-function getGearPath(diameter: number, props: GearProps, outside: boolean) {
+function getSvgShape(diameter: number, props: GearProps, outside: boolean): string {
   const rad = diameter / 2
   const gearRad = rad * props.radius
 
+  if (props.teeth === 0) {
+    const drad = gearRad * 2
+    return `${rad - gearRad},${rad} a ${gearRad},${gearRad} 0 1,0 ${drad},0 a ${gearRad},${gearRad} 0 1,0 -${drad},0`
+  }
+
   const toothLength = outside
     ? (rad - gearRad) * props.toothLen
-    : (    - gearRad) * props.toothLen
+    : (-gearRad) * props.toothLen
 
   const segmentLen = 2 * Math.PI / props.teeth
 
@@ -42,29 +49,34 @@ function getGearPath(diameter: number, props: GearProps, outside: boolean) {
 
   const offset = props.angleOffset * Math.PI * 2
 
-  const outer: Point[] = []
+  let shape: Point[] = []
   for (let i = props.teeth - 1; i >= 0; i--) {
     for (const p of points) {
-      outer.push(p.rotateOnBy(center, offset + i * segmentLen))
+      shape.push(p.rotateOnBy(center, offset + i * segmentLen))
     }
   }
 
-  return outer
+  if (!outside) {
+    shape = shape.reverse()
+  }
+
+  return shape.map(p => p.toSvgString()).join(' ')
 }
 
-export function getFullPath(props: DoubleGearProps) {
-  const outer = getGearPath(props.diameter, props.outer, true)
-  const inner = getGearPath(props.diameter, props.inner, false)
+export function getSvgPath(props: DoubleGearProps): string {
+  const outer = getSvgShape(props.diameter, props.outer, true)
+  const inner = getSvgShape(props.diameter, props.inner, false)
 
-  return `M ${outer.map(c => c.toString()).join(' ')} z M ${inner.reverse().map(c => c.toString()).join(' ')} Z`
+  return `M ${outer} z M ${inner} Z`
 }
 
-export function makeSvg(props: DoubleGearProps) {
+export function makeSvg(props: DoubleGearProps): string {
+  // language=SVG
   return `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <svg xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 ${props.diameter} ${props.diameter}"
         height="${props.diameter}px" width="${props.diameter}px"
         x="0px" y="0px">
-        <path d="${getFullPath(props)}" />
+        <path d="${getSvgPath(props)}" />
     </svg>`
 }

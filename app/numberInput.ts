@@ -59,6 +59,8 @@ export class NumberInput {
 }
 
 export interface InputMapper {
+  affix?: [string, string]
+
   /** actual value => displayed value */
   display(n: number): number
 
@@ -66,7 +68,6 @@ export interface InputMapper {
   update(n: number): number
 
   initInput?(input: HTMLInputElement): void
-  affix?: [string, string]
 }
 
 const identityMapper: InputMapper = {
@@ -86,11 +87,13 @@ export function mapAtLeast(min: number): InputMapper {
 
     initInput(input: HTMLInputElement) {
       input.setAttribute('min', '' + min)
-    }
+    },
   }
 }
 
 export const percentMapper: InputMapper = {
+  affix: ['', ' %'],
+
   display(n: number): number {
     return n * 100
   },
@@ -103,11 +106,11 @@ export const percentMapper: InputMapper = {
     input.setAttribute('min', '0')
     input.setAttribute('max', '100')
   },
-
-  affix: ['', ' %']
 }
 
 export const degreeMapper: InputMapper = {
+  affix: ['', ' °'],
+
   display(n: number): number {
     return n * 360
   },
@@ -120,6 +123,4 @@ export const degreeMapper: InputMapper = {
     input.setAttribute('min', '0')
     input.setAttribute('max', '360')
   },
-
-  affix: ['', ' °']
 }

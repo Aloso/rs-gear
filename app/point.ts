@@ -1,9 +1,17 @@
 export class Point {
-  constructor(readonly x: number, readonly y: number) {
+  constructor(
+    public readonly x: number,
+    public readonly y: number,
+  ) {}
+
+  public toSvgString() {
+    return this.x.toFixed(svgNumberPrecision) + ',' + this.y.toFixed(svgNumberPrecision)
   }
 
-  public toString() {
-    return this.x.toFixed(2) + ',' + this.y.toFixed(2)
+  // noinspection JSUnusedGlobalSymbols
+  public toCompressedSvgString() {
+    return this.x.toFixed(svgNumberPrecision).replace(/0+$/, '')
+      + ',' + this.y.toFixed(svgNumberPrecision).replace(/0+$/, '')
   }
 
   public rotateOnBy(center: Point, angle: number) {
@@ -21,12 +29,6 @@ export class Point {
   public add(x: number, y: number) {
     return new Point(this.x + y, this.y + y)
   }
-
-  public setX(x: number): Point {
-    return new Point(x, this.y)
-  }
-
-  public setY(y: number): Point {
-    return new Point(this.x, y)
-  }
 }
+
+export let svgNumberPrecision = 2

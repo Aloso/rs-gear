@@ -6,7 +6,7 @@ export class EventEmitter<T extends {} | void> {
     }
 
     public off(type: string, listener: (event: T) => void): boolean {
-        let ix = this.listeners.indexOf(listener)
+        const ix = this.listeners.indexOf(listener)
         if (ix !== -1) {
             this.listeners.splice(ix, 1)
             return true
