@@ -69,7 +69,7 @@ function createInputs(callback: () => void): () => DoubleGearProps {
       toothEndWidth: outerToothEndWidth.value,
       angleOffset: outerAngleOffset.value,
       roundGearShape: true,
-      roundToothShape: false,
+      roundToothShape: true,
     },
     inner: {
       radius: innerRadius.value,
@@ -79,7 +79,7 @@ function createInputs(callback: () => void): () => DoubleGearProps {
       toothEndWidth: innerToothEndWidth.value,
       angleOffset: innerAngleOffset.value,
       roundGearShape: true,
-      roundToothShape: false,
+      roundToothShape: true,
     },
   })
 }

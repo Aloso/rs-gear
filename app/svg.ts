@@ -51,7 +51,7 @@ function getSvgShape(diameter: number, props: GearProps, outside: boolean): stri
   if (props.roundGearShape && betweenTeeth > 0.05) {
     console.log(outside ? 'outside is round' : 'inside is round')
 
-    // distance between control points and start/end points:
+    // distance between control points and start/end points on a unit circle:
     // 4/3 * tan(φ/4)
     const cpDist = Math.tan(betweenTeeth / 4) * 4 / 3 * gearRad
 
@@ -63,6 +63,21 @@ function getSvgShape(diameter: number, props: GearProps, outside: boolean): stri
     const cp2 = p2.sub(center).rotateLeft().setAbs(cpDist).add(p2).setCp()
 
     points.splice(3, 0, cp1, cp2)
+  }
+
+  if (props.roundToothShape && toothEndWidth > 0.005) {
+    const p1 = points[points.length - 1]              // sketch: F
+      .rotateOnBy(center, segmentLen)
+    const p2 = points[0]                              // sketch: A
+    const p3 = points[1]                              // sketch: B
+    const p4 = points[2]                              // sketch: G
+
+    const m2 = p2.middleBetween(p3)                   // sketch: E
+    const smallRadius = p2.absTo(p3) / 2              // A-E
+    const m1 = p1.sub(p2).setAbs(smallRadius).add(p2) // sketch: F
+    const m3 = p4.sub(p3).setAbs(smallRadius).add(p3) // sketch: G
+
+    points.splice(0, 2, m1, m2, m3)
   }
 
   const offset = props.angleOffset * Math.PI * 2

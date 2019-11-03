@@ -1,6 +1,6 @@
 export function byId<T extends HTMLElement>(id: string, klass: new() => T): T {
   const el = document.getElementById(id)
-  if (el == null || !(el instanceof klass)) {
+  if (!(el instanceof klass)) {
     throw new Error(`Expected ${klass.name}, got ${el}`)
   }
 

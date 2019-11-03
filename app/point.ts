@@ -14,7 +14,7 @@ export class Point implements IPoint {
   ) {}
 
   public toString(): string {
-    return `${this.cp ? 'CP' : 'P'}{${this.x.toFixed(0)} ${this.y.toFixed(0)}}`
+    return `${this.cp ? 'CP' : 'P'}{${this.x.toFixed(1)} ${this.y.toFixed(1)}}`
   }
 
   public toSvgString(): string {
@@ -52,7 +52,7 @@ export class Point implements IPoint {
   }
 
   public sub(other: IPoint): Point {
-    return new Point(this.x - other.y, this.y - other.y)
+    return new Point(this.x - other.x, this.y - other.y)
   }
 
   public setAbs(abs: number): Point {
