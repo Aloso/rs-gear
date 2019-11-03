@@ -10,7 +10,9 @@
 <div id="config">
   <h1>Gear</h1>
 
-  <div id="commonConfig"></div>
+  <div id="commonConfig">
+    <label><span>Overlay Rust logo:</span><input type="checkbox" id="showRust"></label>
+  </div>
   <div id="outerConfig">
     <h2>Outer</h2>
   </div>
@@ -19,7 +21,10 @@
   </div>
 </div>
 
-<div id="svg"></div>
+<div id="preview">
+  <div id="svg"></div>
+  <img id="rustLogo" src="assets/Rust.svg" alt="">
+</div>
 
 <script src="out/public/bundle.js"></script>
 </body>

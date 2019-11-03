@@ -6,7 +6,7 @@ body {
 
 #config {
     position: absolute;
-    width: 400px;
+    width: 260px;
     left: 0;
     top: 0;
     bottom: 0;
@@ -48,15 +48,22 @@ body {
     width: 55px;
 }
 
-#svg {
+#preview {
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
     width: 100vh;
+    box-shadow: 0 0 10px #0004;
 }
 
-#svg svg {
+#preview img {
+    position: absolute;
+    top: 0;
+}
+
+#preview #svg svg,
+#preview img {
     width: 100%;
     height: auto;
     display: block;

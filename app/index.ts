@@ -5,21 +5,21 @@ import { DoubleGearProps, makeSvg } from './svg'
 const svgWrapper = byId('svg', HTMLElement)
 
 function createInputs(callback: () => void): () => DoubleGearProps {
-  const diameter           = new NumberInput(100,  0, mapAtLeast(1))
+  const diameter           = new NumberInput(100,   0, mapAtLeast(1))
 
-  const outerRadius        = new NumberInput(0.90, 1, percentMapper)
-  const outerTeeth         = new NumberInput(32,   0, mapAtLeast(3))
-  const outerToothLen      = new NumberInput(1,    1, percentMapper)
-  const outerToothWidth    = new NumberInput(0.85, 1, percentMapper)
-  const outerToothEndWidth = new NumberInput(0.15, 1, percentMapper)
-  const outerAngleOffset   = new NumberInput(0,    1, degreeMapper)
+  const outerRadius        = new NumberInput(0.895, 1, percentMapper)
+  const outerTeeth         = new NumberInput(32,    0, mapAtLeast(3))
+  const outerToothLen      = new NumberInput(0.89,  1, percentMapper)
+  const outerToothWidth    = new NumberInput(0.85,  1, percentMapper)
+  const outerToothEndWidth = new NumberInput(0.15,  1, percentMapper)
+  const outerAngleOffset   = new NumberInput(0,     1, degreeMapper)
 
-  const innerRadius        = new NumberInput(0.74, 1, percentMapper)
-  const innerTeeth         = new NumberInput(5,    0, mapAtLeast(0))
-  const innerToothLen      = new NumberInput(0.24, 1, percentMapper)
-  const innerToothWidth    = new NumberInput(0.35, 1, percentMapper)
-  const innerToothEndWidth = new NumberInput(0.05, 1, percentMapper)
-  const innerAngleOffset   = new NumberInput(0,    1, degreeMapper)
+  const innerRadius        = new NumberInput(0.722, 1, percentMapper)
+  const innerTeeth         = new NumberInput(5,     0, mapAtLeast(0))
+  const innerToothLen      = new NumberInput(0.18,  1, percentMapper)
+  const innerToothWidth    = new NumberInput(0.3,   1, percentMapper)
+  const innerToothEndWidth = new NumberInput(0.05,  1, percentMapper)
+  const innerAngleOffset   = new NumberInput(0,     1, degreeMapper)
 
   byId('commonConfig', HTMLElement).append(
     diameter.getLabel('Canvas size'),
@@ -68,7 +68,7 @@ function createInputs(callback: () => void): () => DoubleGearProps {
       toothWidth: outerToothWidth.value,
       toothEndWidth: outerToothEndWidth.value,
       angleOffset: outerAngleOffset.value,
-      roundGearShape: false,
+      roundGearShape: true,
       roundToothShape: false,
     },
     inner: {
@@ -91,3 +91,13 @@ function refresh() {
 }
 
 refresh()
+
+const rustLogo = byId('rustLogo', HTMLImageElement)
+rustLogo.style.display = 'none'
+
+const showRust = byId('showRust', HTMLInputElement)
+showRust.checked = false
+showRust.addEventListener('input', () => {
+  if (showRust.checked) rustLogo.style.display = 'block'
+  else rustLogo.style.display = 'none'
+})
