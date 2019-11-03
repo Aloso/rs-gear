@@ -9,6 +9,7 @@ export interface GearProps {
   angleOffset: number
   roundGearShape: boolean
   roundToothShape: boolean
+  twisting: number
 }
 
 export interface DoubleGearProps {
@@ -47,6 +48,12 @@ function getSvgShape(diameter: number, props: GearProps, outside: boolean): stri
     circle.rotateOnBy(center, -toothEndWidth / 2 - slantWidth),
     circle.rotateOnBy(center, -segmentLen + toothEndWidth / 2 + slantWidth),
   ]
+
+  if (props.twisting !== 0) {
+    const twisting = props.twisting * segmentLen
+    points[0] = points[0].rotateOnBy(center, twisting)
+    points[1] = points[1].rotateOnBy(center, twisting)
+  }
 
   if (props.roundGearShape && betweenTeeth > 0.05) {
     // distance between control points and start/end points on a unit circle:

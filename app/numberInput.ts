@@ -1,23 +1,12 @@
-import { EventEmitter } from './eventEmitter'
+import { InputMapper, MyInput } from './input'
 
-export class NumberInput {
-  public readonly el = document.createElement('input')
-  public readonly change = new EventEmitter<number>()
-
-  private _value: number
-
-  constructor(
-    value: number,
-    precision: number,
-    private mapper = identityMapper,
-  ) {
-    this._value = value
+export class NumberInput extends MyInput<number> {
+  constructor(value: number, precision: number, mapper?: InputMapper<number>) {
+    super(value, mapper)
 
     const step = (0.1 ** precision * 100_000_000_000) / 100_000_000_000
-    this.el.setAttribute('step', '' + step)
     this.el.setAttribute('type', 'number')
-
-    if (this.mapper.initInput) this.mapper.initInput(this.el)
+    this.el.setAttribute('step', '' + step)
 
     this.el.value = '' + this.mapper.display(value)
 
@@ -39,26 +28,9 @@ export class NumberInput {
       this.change.emit(v)
     }
   }
-
-  public getLabel(label: string): HTMLLabelElement {
-    const el = document.createElement('label')
-    const span = document.createElement('span')
-    span.innerText = `${label}: `
-    el.append(span)
-
-    if (this.mapper.affix != null) {
-      const prefix = document.createTextNode(this.mapper.affix[0])
-      const suffix = document.createTextNode(this.mapper.affix[1])
-      el.append(prefix, this.el, suffix)
-    } else {
-      el.append(this.el)
-    }
-
-    return el
-  }
 }
 
-export interface InputMapper {
+export interface NumInputMapper {
   affix?: [string, string]
 
   /** actual value => displayed value */
@@ -70,12 +42,7 @@ export interface InputMapper {
   initInput?(input: HTMLInputElement): void
 }
 
-const identityMapper: InputMapper = {
-  display: (n: number) => n,
-  update: (n: number) => n,
-}
-
-export function mapAtLeast(min: number): InputMapper {
+export function mapAtLeast(min: number): NumInputMapper {
   return {
     display(n: number): number {
       return n
@@ -91,7 +58,7 @@ export function mapAtLeast(min: number): InputMapper {
   }
 }
 
-export const percentMapper: InputMapper = {
+export const percentMapper: NumInputMapper = {
   affix: ['', ' %'],
 
   display(n: number): number {
@@ -108,7 +75,19 @@ export const percentMapper: InputMapper = {
   },
 }
 
-export const degreeMapper: InputMapper = {
+export const openPercentMapper: NumInputMapper = {
+  affix: ['', ' %'],
+
+  display(n: number): number {
+    return n * 100
+  },
+
+  update(n: number): number {
+    return n / 100
+  },
+}
+
+export const degreeMapper: NumInputMapper = {
   affix: ['', ' °'],
 
   display(n: number): number {

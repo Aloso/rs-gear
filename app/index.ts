@@ -1,10 +1,23 @@
 import { byId } from './domHelper'
-import { NumberInput, mapAtLeast, degreeMapper, percentMapper } from './numberInput'
+import { NumberInput, mapAtLeast, degreeMapper, percentMapper, openPercentMapper } from './numberInput'
+import { CheckInput } from './checkInput'
 import { DoubleGearProps, makeSvg } from './svg'
 
 const svgWrapper = byId('svg', HTMLElement)
 
 function createInputs(callback: () => void): () => DoubleGearProps {
+  const rustLogo = byId('rustLogo', HTMLImageElement)
+  const rLogo = byId('rLogo', HTMLImageElement)
+
+  rustLogo.style.display = 'none'
+  rLogo.style.display = 'none'
+
+  const showOverlayR = new CheckInput(false)
+  const showOverlayRust = new CheckInput(false)
+
+  showOverlayR.change.on(checked => rLogo.style.display = checked ? 'block' : 'none')
+  showOverlayRust.change.on(checked => rustLogo.style.display = checked ? 'block' : 'none')
+
   const diameter           = new NumberInput(100,   0, mapAtLeast(1))
 
   const outerRadius        = new NumberInput(0.895, 1, percentMapper)
@@ -13,6 +26,8 @@ function createInputs(callback: () => void): () => DoubleGearProps {
   const outerToothWidth    = new NumberInput(0.85,  1, percentMapper)
   const outerToothEndWidth = new NumberInput(0.15,  1, percentMapper)
   const outerAngleOffset   = new NumberInput(0,     1, degreeMapper)
+  const outerTwisting      = new NumberInput(0,     1, openPercentMapper)
+  const outerRoundTeeth    = new CheckInput(true)
 
   const innerRadius        = new NumberInput(0.722, 1, percentMapper)
   const innerTeeth         = new NumberInput(5,     0, mapAtLeast(0))
@@ -20,8 +35,12 @@ function createInputs(callback: () => void): () => DoubleGearProps {
   const innerToothWidth    = new NumberInput(0.3,   1, percentMapper)
   const innerToothEndWidth = new NumberInput(0.05,  1, percentMapper)
   const innerAngleOffset   = new NumberInput(0,     1, degreeMapper)
+  const innerTwisting      = new NumberInput(0,     1, openPercentMapper)
+  const innerRoundTeeth    = new CheckInput(true)
 
   byId('commonConfig', HTMLElement).append(
+    showOverlayR.getLabel('Overlay R'),
+    showOverlayRust.getLabel('Overlay Rust'),
     diameter.getLabel('Canvas size'),
   )
 
@@ -32,6 +51,8 @@ function createInputs(callback: () => void): () => DoubleGearProps {
     outerToothWidth.getLabel('Tooth width'),
     outerToothEndWidth.getLabel('Tooth end width'),
     outerAngleOffset.getLabel('Angle offset'),
+    outerTwisting.getLabel('Twisting'),
+    outerRoundTeeth.getLabel('Round teeth'),
   )
 
   byId('innerConfig', HTMLElement).append(
@@ -41,6 +62,8 @@ function createInputs(callback: () => void): () => DoubleGearProps {
     innerToothWidth.getLabel('Tooth width'),
     innerToothEndWidth.getLabel('Tooth end width'),
     innerAngleOffset.getLabel('Angle offset'),
+    innerTwisting.getLabel('Twisting'),
+    innerRoundTeeth.getLabel('Round teeth'),
   );
 
   [
@@ -57,6 +80,10 @@ function createInputs(callback: () => void): () => DoubleGearProps {
     innerToothEndWidth,
     outerAngleOffset,
     innerAngleOffset,
+    outerTwisting,
+    innerTwisting,
+    outerRoundTeeth,
+    innerRoundTeeth,
   ].forEach(input => input.change.on(callback))
 
   return () => ({
@@ -68,8 +95,9 @@ function createInputs(callback: () => void): () => DoubleGearProps {
       toothWidth: outerToothWidth.value,
       toothEndWidth: outerToothEndWidth.value,
       angleOffset: outerAngleOffset.value,
+      twisting: outerTwisting.value,
       roundGearShape: true,
-      roundToothShape: true,
+      roundToothShape: outerRoundTeeth.value,
     },
     inner: {
       radius: innerRadius.value,
@@ -78,8 +106,9 @@ function createInputs(callback: () => void): () => DoubleGearProps {
       toothWidth: innerToothWidth.value,
       toothEndWidth: innerToothEndWidth.value,
       angleOffset: innerAngleOffset.value,
+      twisting: innerTwisting.value,
       roundGearShape: true,
-      roundToothShape: true,
+      roundToothShape: innerRoundTeeth.value,
     },
   })
 }
@@ -87,29 +116,8 @@ function createInputs(callback: () => void): () => DoubleGearProps {
 const getInputs = createInputs(refresh)
 
 function refresh() {
+  console.log(getInputs())
   svgWrapper.innerHTML = makeSvg(getInputs())
 }
 
 refresh()
-
-const rustLogo = byId('rustLogo', HTMLImageElement)
-const rLogo = byId('rLogo', HTMLImageElement)
-
-rustLogo.style.display = 'none'
-rLogo.style.display = 'none'
-
-const showRust = byId('showRust', HTMLInputElement)
-const showR = byId('showR', HTMLInputElement)
-
-showRust.checked = false
-showR.checked = false
-
-showRust.addEventListener('input', () => {
-  if (showRust.checked) rustLogo.style.display = 'block'
-  else rustLogo.style.display = 'none'
-})
-
-showR.addEventListener('input', () => {
-  if (showR.checked) rLogo.style.display = 'block'
-  else rLogo.style.display = 'none'
-})
