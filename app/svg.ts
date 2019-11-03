@@ -49,8 +49,6 @@ function getSvgShape(diameter: number, props: GearProps, outside: boolean): stri
   ]
 
   if (props.roundGearShape && betweenTeeth > 0.05) {
-    console.log(outside ? 'outside is round' : 'inside is round')
-
     // distance between control points and start/end points on a unit circle:
     // 4/3 * tan(φ/4)
     const cpDist = Math.tan(betweenTeeth / 4) * 4 / 3 * gearRad
@@ -66,18 +64,34 @@ function getSvgShape(diameter: number, props: GearProps, outside: boolean): stri
   }
 
   if (props.roundToothShape && toothEndWidth > 0.005) {
-    const p1 = points[points.length - 1]              // sketch: F
+    const p1 = points[points.length - 1]            // sketch: F
       .rotateOnBy(center, segmentLen)
-    const p2 = points[0]                              // sketch: A
-    const p3 = points[1]                              // sketch: B
-    const p4 = points[2]                              // sketch: G
+    const p2 = points[0]                            // sketch: A
+    const p3 = points[1]                            // sketch: B
+    const p4 = points[2]                            // sketch: G
 
-    const m2 = p2.middleBetween(p3)                   // sketch: E
-    const smallRadius = p2.absTo(p3) / 2              // A-E
-    const m1 = p1.sub(p2).setAbs(smallRadius).add(p2) // sketch: F
-    const m3 = p4.sub(p3).setAbs(smallRadius).add(p3) // sketch: G
+    const m2 = p2.middleBetween(p3)                 // sketch: E
+    const smallRad = p2.distance(p3) / 2            // A-E
+    const m1 = p1.sub(p2).setAbs(smallRad).add(p2)  // sketch: F
+    const m3 = p4.sub(p3).setAbs(smallRad).add(p3)  // sketch: G
 
-    points.splice(0, 2, m1, m2, m3)
+    const phi = Math.PI - p2.angleBetween(m2, m1)
+
+    const alpha = phi / 2
+    const a = m2.distance(p2)
+    const b = a / Math.tan(alpha)
+    const c = Math.sqrt(a * a + b * b)
+
+    // 4/3 * tan(φ/4)
+    const cpDist = Math.tan(phi / 4) * 4 / 3 * c
+
+    // approximate a circle arc
+    const cp1 = p2.setDistance(cpDist, m1).setCp()
+    const cp2 = p2.setDistance(cpDist, m2).setCp()
+    const cp3 = p3.setDistance(cpDist, m2).setCp()
+    const cp4 = p3.setDistance(cpDist, m3).setCp()
+
+    points.splice(0, 2, m1, cp1, cp2, m2, cp3, cp4, m3)
   }
 
   const offset = props.angleOffset * Math.PI * 2
@@ -109,6 +123,7 @@ function getSvgShape(diameter: number, props: GearProps, outside: boolean): stri
       return p.toSvgString()
     }
   }).join(' ')
+    .replace(/L\s*C/g, 'C')
     .replace(/^\s+|\s*L\s*$/g, '')
     .replace(/\s\s+/g, ' ')
 }
