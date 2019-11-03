@@ -93,11 +93,23 @@ function refresh() {
 refresh()
 
 const rustLogo = byId('rustLogo', HTMLImageElement)
+const rLogo = byId('rLogo', HTMLImageElement)
+
 rustLogo.style.display = 'none'
+rLogo.style.display = 'none'
 
 const showRust = byId('showRust', HTMLInputElement)
+const showR = byId('showR', HTMLInputElement)
+
 showRust.checked = false
+showR.checked = false
+
 showRust.addEventListener('input', () => {
   if (showRust.checked) rustLogo.style.display = 'block'
   else rustLogo.style.display = 'none'
+})
+
+showR.addEventListener('input', () => {
+  if (showR.checked) rLogo.style.display = 'block'
+  else rLogo.style.display = 'none'
 })
