@@ -38,9 +38,9 @@ function createInputs(callback: () => void): () => DoubleGearProps {
   const innerTwisting = new NumberInput(0, 1, openPercentMapper)
   const innerRoundTeeth = new CheckInput(true)
 
-  const holeRadius = new NumberInput(0.1, 2, percentMapper)
+  const holeRadius = new NumberInput(0.12, 1, openPercentMapper)
   const holeCount = new NumberInput(5, 0, mapAtLeast(0))
-  const holePosition = new NumberInput(0.7, 2, percentMapper)
+  const holePosition = new NumberInput(0.74, 2, percentMapper)
   const holeAngleOffset = new NumberInput(0, 1, degreeMapper)
 
   byId('commonConfig', HTMLElement).append(

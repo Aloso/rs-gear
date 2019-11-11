@@ -143,6 +143,31 @@ function getSvgShape(diameter: number, props: GearProps, outside: boolean): stri
     .replace(/\s\s+/g, ' ')
 }
 
+function getSvgHoles(diameter: number, props: GearHoleProps): string {
+  if (props.holes === 0) return ''
+
+  const result: string[] = []
+
+  const segmentLen = 2 * Math.PI / props.holes
+  const rad = diameter / 2
+  const center = new Point(rad, rad)
+  const off = props.angleOffset * Math.PI * 2
+
+  const circlePt = new Point(rad, rad - props.position * rad)
+
+  for (let i = 0; i < props.holes; i++) {
+    const c = circlePt.rotateOnBy(center, segmentLen * i + off)
+    const x = c.x.toFixed(svgNumberPrecision)
+    const y = c.y.toFixed(svgNumberPrecision)
+
+    const r = (props.radius * rad / 2).toFixed(svgNumberPrecision)
+
+    result.push(`<circle fill="black" cx="${x}" cy="${y}" r="${r}" />`)
+  }
+
+  return result.join('')
+}
+
 export function getSvgPath(props: DoubleGearProps): string {
   const outer = getSvgShape(props.diameter, props.outer, true)
   const inner = getSvgShape(props.diameter, props.inner, false)
@@ -157,7 +182,13 @@ export function makeSvg(props: DoubleGearProps): string {
         viewBox="0 0 ${props.diameter} ${props.diameter}"
         height="${props.diameter}px" width="${props.diameter}px"
         x="0px" y="0px">
-        <path d="${getSvgPath(props)}" />
+        <defs>
+          <mask id="gearHoles">
+            <rect width="100%" height="100%" fill="white"/>
+            ${getSvgHoles(props.diameter, props.hole)}
+          </mask>
+        </defs>
+        <path d="${getSvgPath(props)}" mask="url(#gearHoles)" />
     </svg>`
 }
 

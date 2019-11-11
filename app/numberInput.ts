@@ -4,7 +4,8 @@ export class NumberInput extends MyInput<number> {
   constructor(value: number, precision: number, mapper?: InputMapper<number>) {
     super(value, mapper)
 
-    const step = (0.1 ** precision * 100_000_000_000) / 100_000_000_000
+    const step = (0.1 ** precision * 100_000_000 | 0) / 100_000_000
+    console.log(precision, step)
     this.el.setAttribute('type', 'number')
     this.el.setAttribute('step', '' + step)
 
