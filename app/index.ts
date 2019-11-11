@@ -40,7 +40,7 @@ function createInputs(callback: () => void): () => DoubleGearProps {
 
   const holeRadius = new NumberInput(0.12, 1, openPercentMapper)
   const holeCount = new NumberInput(5, 0, mapAtLeast(0))
-  const holePosition = new NumberInput(0.74, 2, percentMapper)
+  const holePosition = new NumberInput(0.74, 1, percentMapper)
   const holeAngleOffset = new NumberInput(0, 1, degreeMapper)
 
   byId('commonConfig', HTMLElement).append(
@@ -138,7 +138,6 @@ function createInputs(callback: () => void): () => DoubleGearProps {
 const getInputs = createInputs(refresh)
 
 function refresh() {
-  console.log(getInputs())
   svgWrapper.innerHTML = makeSvg(getInputs())
 }
 

@@ -5,7 +5,6 @@ export class NumberInput extends MyInput<number> {
     super(value, mapper)
 
     const step = (0.1 ** precision * 100_000_000 | 0) / 100_000_000
-    console.log(precision, step)
     this.el.setAttribute('type', 'number')
     this.el.setAttribute('step', '' + step)
 
