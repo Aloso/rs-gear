@@ -2,6 +2,8 @@
   "name": "gear",
   "version": "1.0.0",
   "description": "SVG renderer vor gear",
+  "repository": "https://github.com/Aloso/rs-gear.git",
+  "homepage": "http://aloso.bplaced.net/gear/",
   "keywords": [
     "gear",
     "svg",

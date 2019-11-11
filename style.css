@@ -37,6 +37,18 @@ body {
     font-size: 1.75rem;
 }
 
+#gh-link {
+    float: right;
+    font-size: 55%;
+    text-decoration: none;
+    color: #1e90ff;
+    font-weight: normal;
+}
+
+#gh-link:hover {
+    text-decoration: underline;
+}
+
 #config h2 {
     font-size: 1.3rem;
     font-weight: bold;
