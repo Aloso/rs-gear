@@ -9,4 +9,4 @@ A website for fine-tuning the Rust logo. [Try it out!](http://aloso.bplaced.net/
 
 There's a [discussion](https://users.rust-lang.org/t/ideas-for-redesigning-the-rust-logo/26051/77) to redesign the Rust logo, so I wrote a web app to try things out.
 
-![Rust logo](assets/Rust original.svg)
+![Rust logo](/assets/Rust%20original.svg)
