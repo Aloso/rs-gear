@@ -18,25 +18,30 @@ function createInputs(callback: () => void): () => DoubleGearProps {
   showOverlayR.change.on(checked => rLogo.style.display = checked ? 'block' : 'none')
   showOverlayRust.change.on(checked => rustLogo.style.display = checked ? 'block' : 'none')
 
-  const diameter           = new NumberInput(100,   0, mapAtLeast(1))
+  const diameter = new NumberInput(100, 0, mapAtLeast(1))
 
-  const outerRadius        = new NumberInput(0.895, 1, percentMapper)
-  const outerTeeth         = new NumberInput(32,    0, mapAtLeast(3))
-  const outerToothLen      = new NumberInput(0.89,  1, percentMapper)
-  const outerToothWidth    = new NumberInput(0.85,  1, percentMapper)
-  const outerToothEndWidth = new NumberInput(0.15,  1, percentMapper)
-  const outerAngleOffset   = new NumberInput(0,     1, degreeMapper)
-  const outerTwisting      = new NumberInput(0,     1, openPercentMapper)
-  const outerRoundTeeth    = new CheckInput(true)
+  const outerRadius = new NumberInput(0.895, 1, percentMapper)
+  const outerTeeth = new NumberInput(32, 0, mapAtLeast(3))
+  const outerToothLen = new NumberInput(0.89, 1, percentMapper)
+  const outerToothWidth = new NumberInput(0.85, 1, percentMapper)
+  const outerToothEndWidth = new NumberInput(0.15, 1, openPercentMapper)
+  const outerAngleOffset = new NumberInput(0, 1, degreeMapper)
+  const outerTwisting = new NumberInput(0, 1, openPercentMapper)
+  const outerRoundTeeth = new CheckInput(true)
 
-  const innerRadius        = new NumberInput(0.722, 1, percentMapper)
-  const innerTeeth         = new NumberInput(5,     0, mapAtLeast(0))
-  const innerToothLen      = new NumberInput(0.18,  1, percentMapper)
-  const innerToothWidth    = new NumberInput(0.3,   1, percentMapper)
-  const innerToothEndWidth = new NumberInput(0.05,  1, percentMapper)
-  const innerAngleOffset   = new NumberInput(0,     1, degreeMapper)
-  const innerTwisting      = new NumberInput(0,     1, openPercentMapper)
-  const innerRoundTeeth    = new CheckInput(true)
+  const innerRadius = new NumberInput(0.722, 1, percentMapper)
+  const innerTeeth = new NumberInput(5, 0, mapAtLeast(0))
+  const innerToothLen = new NumberInput(0.18, 1, percentMapper)
+  const innerToothWidth = new NumberInput(0.3, 1, percentMapper)
+  const innerToothEndWidth = new NumberInput(0.05, 1, openPercentMapper)
+  const innerAngleOffset = new NumberInput(0, 1, degreeMapper)
+  const innerTwisting = new NumberInput(0, 1, openPercentMapper)
+  const innerRoundTeeth = new CheckInput(true)
+
+  const holeRadius = new NumberInput(0.1, 2, percentMapper)
+  const holeCount = new NumberInput(5, 0, mapAtLeast(0))
+  const holePosition = new NumberInput(0.7, 2, percentMapper)
+  const holeAngleOffset = new NumberInput(0, 1, degreeMapper)
 
   byId('commonConfig', HTMLElement).append(
     showOverlayR.getLabel('Overlay R'),
@@ -66,6 +71,13 @@ function createInputs(callback: () => void): () => DoubleGearProps {
     innerRoundTeeth.getLabel('Round teeth'),
   );
 
+  byId('holeConfig', HTMLElement).append(
+    holeRadius.getLabel('Radius'),
+    holeCount.getLabel('Hole number'),
+    holePosition.getLabel('Position'),
+    holeAngleOffset.getLabel('Angle offset'),
+  );
+
   [
     diameter,
     outerRadius,
@@ -84,6 +96,10 @@ function createInputs(callback: () => void): () => DoubleGearProps {
     innerTwisting,
     outerRoundTeeth,
     innerRoundTeeth,
+    holeRadius,
+    holeCount,
+    holePosition,
+    holeAngleOffset,
   ].forEach(input => input.change.on(callback))
 
   return () => ({
@@ -110,6 +126,12 @@ function createInputs(callback: () => void): () => DoubleGearProps {
       roundGearShape: true,
       roundToothShape: innerRoundTeeth.value,
     },
+    hole: {
+      radius: holeRadius.value,
+      holes: holeCount.value,
+      position: holePosition.value,
+      angleOffset: holeAngleOffset.value,
+    }
   })
 }
 
@@ -121,3 +143,10 @@ function refresh() {
 }
 
 refresh()
+
+window.addEventListener('keydown', e => {
+  if (e.key === 's' && e.ctrlKey && !e.altKey && !e.shiftKey && !e.metaKey) {
+    e.preventDefault()
+    prompt('SVG output\n\nPress Ctrl+C to copy:', svgWrapper.innerHTML)
+  }
+})

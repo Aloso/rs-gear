@@ -12,10 +12,18 @@ export interface GearProps {
   twisting: number
 }
 
+export interface GearHoleProps {
+  radius: number
+  holes: number
+  position: number
+  angleOffset: number
+}
+
 export interface DoubleGearProps {
   diameter: number
   outer: GearProps
   inner: GearProps
+  hole: GearHoleProps
 }
 
 function getSvgShape(diameter: number, props: GearProps, outside: boolean): string {
