@@ -31,8 +31,8 @@ function getSvgShape(diameter: number, props: GearProps, outside: boolean): stri
   const gearRad = rad * props.radius
 
   if (props.teeth === 0) {
-    const drad = gearRad * 2
-    return `${rad - gearRad},${rad} a ${gearRad},${gearRad} 0 1,0 ${drad},0 a ${gearRad},${gearRad} 0 1,0 -${drad},0`
+    const dRad = gearRad * 2
+    return `${rad - gearRad},${rad} a ${gearRad},${gearRad} 0 1,0 ${dRad},0 a ${gearRad},${gearRad} 0 1,0 -${dRad},0`
   }
 
   const toothLength = outside
